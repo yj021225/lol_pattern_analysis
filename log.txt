@@ -1,0 +1,19 @@
+naive_analysis_at14
+모델 계수 (theta) :  [ 2.24044148e-01 -1.59028323e-01  1.73470044e-01 -4.73071095e-02
+  5.23509301e-02  1.43965122e-04 -5.02227294e-05]
+모델 절편 (b) :  0.37967548207258306
+정확도 (Accuracy, threshold: 0.5): 0.6141160949868074
+AUROC: 0.644451501358456
+
+naive_analysis_af14
+모델 계수 (theta) :  [ 3.61414532e-01 -4.59612863e-01  7.37365400e-01  9.15368538e-02
+ -7.88146861e-03  2.78917766e-05 -6.38308498e-05]
+모델 절편 (b) :  0.18431338828950838
+정확도 (Accuracy, threshold: 0.5): 0.8700527704485488
+AUROC: 0.9416675487809181
+
+naive_analysis3
+중요 Feature: Index(['af14dtpm', 'af14dpm', 'af14killsRatio', 'af14deathsRatio',
+       'af14assistsRatio'],
+      dtype='object')
+정확도: 0.901, F1-Score: 0.907, AUROC: 0.957
