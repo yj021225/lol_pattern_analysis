@@ -12,15 +12,18 @@ https://github.com/danmadeira/simple-icon-badges
 <img src="https://img.shields.io/badge/pycharm-%23000000.svg?&style=for-the-badge&logo=pycharm&logoColor=white" />
 
 ## 1. 개요
+
 ### 1.1 리그 오브 레전드 게임 분석의 영향력
 LoL은 글로벌 e스포츠 시장의 중심에 있는 게임으로, 분석을 통해 팀의 전략 개선에 기여할 수 있습니다.<br>
 LoL에서 생성되는 방대한 데이터는 데이터 분석, 머신 러닝 및 AI 알고리즘 테스트에 중요한 자원이 됩니다.<br>
 예측 모델 구축, 추천 시스템 개발, 게임 밸런스 최적화 등에 활용할 수 있습니다.<br>
+
 ### 1.2 문제 정의
 나는 이번 프로젝트를 통해 미드라이너 데이터를 전처리하여 미드라이너의 실력지표 산출 및 평가를하여<br>
 승리할 확률을 예측하는 모델을 구축할 것이다. 이번 프로젝트를 통해 E-sports산업에 도움이 되었으면 한다.<br>
 
 ## 2. 데이터 전처리
+
 ### 2.1 성능지표 구축
 [extracted_full_data.json](./extracted_full_data.json)<br>
 [extracted_full_data_o.json](./extracted_full_data_o.json)<br>
@@ -59,6 +62,7 @@ LoL에서 생성되는 방대한 데이터는 데이터 분석, 머신 러닝 �
             },
 ```
 extracted_full_data.json
+
 ### 2.2 비교 성능지표 구축
 [merged_data_full.json](./merged_data_full.json)<br>
 [merge_data_sample.json](./merge_data_sample.json)<br>
@@ -92,6 +96,7 @@ extracted_full_data.json
             },
 ```
 merged_data_full.json
+
 ### 2.3 학습 데이터 구축
 [final_target_data.json](./final_target_data.json)<br>
 병합된 데이터에서 핵심 지표를 추출하여 데이터 분석 및 모델 학습에 적합한 형식으로 가공하여 학습 데이터를 구축했다.<br>
@@ -108,6 +113,7 @@ merged_data_full.json
     },
 ```
 final_target_data.json
+
 ## 3.미드라이너 실력 지표 산출 및 평가
 ```
 naive_analysis_at14
@@ -135,3 +141,52 @@ AUROC: 0.9416675487809181
 정확도는 0.87로 매우 높은 정확도를 보여주며 초반 데이터와 달리 예측을 잘하는 것으롷 볼 수 있다.<br>
 AUROC 점수가 0.9 이상이면 매우 좋은 성능을 나타냅니다.<br>
 이 점수는 모델이 승리와 패배를 거의 완벽하게 구분할 수 있음을 보여줍니다.<br>
+
+## 4. 데이터 분석 코드
+```
+import pandas as pd
+import numpy as np
+import json
+
+df = pd.read_json("./final_target_data.json")
+
+combat_at14 = ['at14killsRatio', 'at14deathsRatio', 'at14assistsRatio',
+'at14solokillsRatio', 'at14solodeathsRatio',
+'at14dpm', 'at14dtpm']
+
+combat_af14 = ['af14killsRatio', 'af14deathsRatio', 'af14assistsRatio',
+'af14solokillsRatio', 'af14solodeathsRatio',
+'af14dpm', 'af14dtpm']
+
+x = df[combat_at14]
+y = df['targetWin'].astype(int)
+
+# print(x)
+# print(y)
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import accuracy_score, roc_auc_score
+
+model = LinearRegression()
+model.fit(x, y)
+
+print("모델 계수 (theta) : ", model.coef_)
+print("모델 절편 (b) : ", model.intercept_)
+
+y_pred = model.predict(x)
+
+threshold = 0.5
+y_pred_class = (y_pred >= threshold).astype(int)
+
+accuracy = accuracy_score(y, y_pred_class)
+auroc = roc_auc_score(y, y_pred)
+
+print(f"정확도 (Accuracy, threshold: {threshold}): {accuracy}")
+print(f"AUROC: {auroc}")
+```
+naive_analysis.py<br>
+
+## 5. 느낌 및 보완방향
+이번 프로젝트는 롤 게임을 접해보지 못한 나에게는 아주 어려운 과제였다.<br>
+미드라이너 데이터는 나에게 낮설었지만 프로젝트를 진행하면서 점점 익숙해졌다.<br>
+데이터를 전처리하는 과정에서 복잡한 코드를 작성하면서 어려움을 격었었다.<br>
+앞으로는 롤 데이터에 대해 자세히 알아본 뒤 접근해야할 것 같다.
